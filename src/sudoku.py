@@ -43,6 +43,12 @@ class Sudoku:
         else:
             self._board[coordinates[0], coordinates[1]] = value
 
+    def set_board(self, board_to_set):
+        self._board = board_to_set
+
+    def solve(self):
+        pass
+
     def __str__(self) -> str:
         board_ui = ''
         for i, row in enumerate(self._board):
