@@ -1,10 +1,14 @@
 import numpy as np
 
-from my_exceptions import IndexOutOfRange
+from my_exceptions import (
+    IndexOutOfRange,
+    NotADigit,
+)
+
 
 class Sudoku:
     def __init__(self):
-        board = np.zeros((9, 9))
+        self._board = np.zeros((9, 9), dtype=int)
 
     def get_subarray(self, id):
         match id:
@@ -29,5 +33,24 @@ class Sudoku:
             case _:
                 raise IndexOutOfRange("Sudoku board has only 9 3x3 subboards")
         return subboard
-    
-    
+
+    def get_value(self, coordinates):
+        return self._board[coordinates[0], coordinates[1]]
+
+    def set_value(self, coordinates, value):
+        if value < 1 or value > 9:
+            raise NotADigit("Number must be a digit")
+        else:
+            self._board[coordinates[0], coordinates[1]] = value
+
+    def __str__(self) -> str:
+        board_ui = ''
+        for i, row in enumerate(self._board):
+            if i % 3 == 0 and i != 0:
+                board_ui += 21 * '-' + '\n'
+            for j, value in enumerate(row):
+                if j % 3 == 0 and j != 0:
+                    board_ui += '| '
+                board_ui += str(value) + ' '
+            board_ui += '\n'
+        return board_ui
