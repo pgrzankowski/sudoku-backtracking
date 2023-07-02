@@ -13,8 +13,8 @@ def main():
                       [0, 6, 0, 0, 0, 0, 0, 8, 1],
                       [0, 0, 0, 0, 0, 0, 0, 0, 9]])
     print(sudoku)
-    sudoku.solve()
-    print(sudoku)
+    # sudoku.solve()
+    # print(sudoku)
 
 
 if __name__ == '__main__':

@@ -13,23 +13,23 @@ class Sudoku:
     def get_subarray(self, id):
         match id:
             case 1:
-                subboard = self.board[0:3, 0:3]
+                subboard = self._board[0:3, 0:3]
             case 2:
-                subboard = self.board[0:3, 3:6]
+                subboard = self._board[0:3, 3:6]
             case 3:
-                subboard = self.board[0:3, 6:9]
+                subboard = self._board[0:3, 6:9]
             case 4:
-                subboard = self.board[3:6, 0:3]
+                subboard = self._board[3:6, 0:3]
             case 5:
-                subboard = self.board[3:6, 3:6]
+                subboard = self._board[3:6, 3:6]
             case 6:
-                subboard = self.board[3:6, 6:9]
+                subboard = self._board[3:6, 6:9]
             case 7:
-                subboard = self.board[6:9, 0:3]
+                subboard = self._board[6:9, 0:3]
             case 8:
-                subboard = self.board[6:9, 3:6]
+                subboard = self._board[6:9, 3:6]
             case 9:
-                subboard = self.board[6:9, 6:9]
+                subboard = self._board[6:9, 6:9]
             case _:
                 raise IndexOutOfRange("Sudoku board has only 9 3x3 subboards")
         return subboard
