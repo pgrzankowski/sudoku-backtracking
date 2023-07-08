@@ -7,10 +7,11 @@ from my_exceptions import (
 
 
 class Sudoku:
-    def __init__(self):
-        self._board = np.zeros((9, 9), dtype=int)
 
-    def get_board(self):
+    def __init__(self, board=np.zeros((9, 9), dtype=int)):
+        self.set_board(board)
+
+    def get_current_board(self):
         return self._board
 
     def get_subgrid(self, coordinates):
@@ -29,7 +30,7 @@ class Sudoku:
             self._board[coordinates[0], coordinates[1]] = value
 
     def set_board(self, board_to_set):
-        self._board = np.array(board_to_set)
+        self._board = board_to_set
 
     def solve(self):
         blank = self.find_blank()
