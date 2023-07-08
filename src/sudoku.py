@@ -10,9 +10,16 @@ class Sudoku:
 
     def __init__(self, board=np.zeros((9, 9), dtype=int)):
         self.set_board(board)
+        self.set_og_values()
 
     def get_current_board(self):
         return self._board
+
+    def get_og_board(self):
+        return self._og_board
+    
+    def get_solution(self):
+        return self._solution
 
     def get_subgrid(self, coordinates):
         start_row = (coordinates[0] // 3) * 3
@@ -20,8 +27,8 @@ class Sudoku:
         subgrid = self._board[start_row:start_row+3, start_col:start_col+3]
         return subgrid
 
-    def get_value(self, coordinates):
-        return self._board[coordinates[0], coordinates[1]]
+    def get_value(self, board, coordinates):
+        return board[coordinates[0], coordinates[1]]
 
     def set_value(self, coordinates, value):
         if value < 0 or value > 9:
@@ -30,9 +37,14 @@ class Sudoku:
             self._board[coordinates[0], coordinates[1]] = value
 
     def set_board(self, board_to_set):
-        self._board = board_to_set
+        self._board = board_to_set.copy()
+        self.solver()
+        self._solution = self._board
+        self._board = board_to_set.copy()
+        self._og_board = board_to_set.copy()
+        self.set_og_values()
 
-    def solve(self):
+    def solver(self):
         blank = self.find_blank()
         if not blank:
             return True
@@ -40,10 +52,14 @@ class Sudoku:
             for x in range(1, 10):
                 if self.possible_value(x, blank):
                     self.set_value(blank, x)
-                    if self.solve():
+                    if self.solver():
                         return True
                     self.set_value(blank, 0)
         return False
+
+    def solve(self):
+        self._board = self._og_board.copy()
+        self.solver()
 
     def find_blank(self):
         for rix, row in enumerate(self._board):
@@ -68,6 +84,16 @@ class Sudoku:
                 if x == value:
                     return False
         return True
+
+    def get_og_values(self):
+        return self._og_values
+
+    def set_og_values(self):
+        self._og_values = []
+        for rix, row in enumerate(self._og_board):
+            for cix, value in enumerate(row):
+                if value != 0:
+                    self._og_values.append((rix, cix))
 
     def __str__(self) -> str:
         board_ui = ''

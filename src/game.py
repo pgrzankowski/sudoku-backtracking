@@ -14,6 +14,7 @@ class Game:
         self._screen = pygame.display.set_mode(self._SCREEN_SIZE)
         self._font = pygame.font.Font(None, 60)
         self._sudoku = Sudoku()
+        self._OG_VALS = self._sudoku.get_og_values()
         self._selected_cell = (0, 0)
         pygame.display.set_caption("Sudoku")
 
@@ -22,16 +23,19 @@ class Game:
             for cix, value in enumerate(row):
                 cellX = cix * self._CELL_SIZE
                 cellY = rix * self._CELL_SIZE
-                if value == 0:
+                if (rix, cix) not in self._OG_VALS:
                     cell_color = (150, 150, 150)
-                    text = self._font.render("", True, (255, 255, 255))
+                    if (rix, cix) == self._selected_cell:
+                        cell_color = (255, 0, 0)
+                    text_color = (0, 0, 0)
                 else:
                     cell_color = (0, 0, 0)
-                    text = self._font.render(str(value), True, (255, 255, 255))
+                    text_color = (255, 255, 255)
+                if value == 0:
+                    text = self._font.render("", True, text_color)
+                else:
+                    text = self._font.render(str(value), True, text_color)
                 rect_data = cellX, cellY, self._CELL_SIZE-5, self._CELL_SIZE-5
-                slc_row, slc_col = self._selected_cell
-                if rix == slc_row and cix == slc_col:
-                    cell_color = (128, 0, 0)
                 pygame.draw.rect(self._screen, cell_color, rect_data)
                 x = cellX + self._CELL_SIZE // 2
                 y = cellY + self._CELL_SIZE // 2
@@ -49,6 +53,7 @@ class Game:
                                  [0, 3, 0, 1, 0, 2, 6, 9, 8],
                                  [6, 0, 0, 3, 0, 5, 0, 0, 0]])
         self._sudoku.set_board(sudoku_board)
+        self._OG_VALS = self._sudoku.get_og_values()
 
     def click_handle(self, mouse_pos):
         row = mouse_pos[1] // self._CELL_SIZE
@@ -57,6 +62,13 @@ class Game:
 
     def solve(self):
         self._sudoku.solve()
+
+    def set_value(self, value):
+        if self._selected_cell not in self._sudoku.get_og_values():
+            solution = self._sudoku.get_solution()
+            proper_val = self._sudoku.get_value(solution, self._selected_cell)
+            if value == proper_val:
+                self._sudoku.set_value(self._selected_cell, value)
 
     def run(self):
         self.set_board()
@@ -73,25 +85,25 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         self.solve()
                     elif event.key == pygame.K_0:
-                        self._sudoku.set_value(self._selected_cell, 0)
+                        self.set_value(0)
                     elif event.key == pygame.K_1:
-                        self._sudoku.set_value(self._selected_cell, 1)
+                        self.set_value(1)
                     elif event.key == pygame.K_2:
-                        self._sudoku.set_value(self._selected_cell, 2)
+                        self.set_value(2)
                     elif event.key == pygame.K_3:
-                        self._sudoku.set_value(self._selected_cell, 3)
+                        self.set_value(3)
                     elif event.key == pygame.K_4:
-                        self._sudoku.set_value(self._selected_cell, 4)
+                        self.set_value(4)
                     elif event.key == pygame.K_5:
-                        self._sudoku.set_value(self._selected_cell, 5)
+                        self.set_value(5)
                     elif event.key == pygame.K_6:
-                        self._sudoku.set_value(self._selected_cell, 6)
+                        self.set_value(6)
                     elif event.key == pygame.K_7:
-                        self._sudoku.set_value(self._selected_cell, 7)
+                        self.set_value(7)
                     elif event.key == pygame.K_8:
-                        self._sudoku.set_value(self._selected_cell, 8)
+                        self.set_value(8)
                     elif event.key == pygame.K_9:
-                        self._sudoku.set_value(self._selected_cell, 9)
+                        self.set_value(9)
             self._screen.fill((255, 255, 255))
             self.draw_board()
             pygame.display.update()
